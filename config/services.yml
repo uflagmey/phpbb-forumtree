@@ -10,3 +10,12 @@ services:
             - '@template'
             - '@user'
             - '%core.table_prefix%forums'
+
+    uflagmey.forumtree.listener:
+        class: uflagmey\forumtree\event\main_listener
+        arguments:
+            - '@controller.helper'
+            - '@language'
+            - '@template'
+        tags:
+            - { name: event.listener }

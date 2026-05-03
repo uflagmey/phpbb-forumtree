@@ -3,8 +3,8 @@
     "type": "phpbb-extension",
     "description": "Stellt die Forenstruktur (Kategorien, Foren, Unterforen) als Baum dar – im ACP und optional als öffentliche Seite. Ausgabe wahlweise als HTML, ASCII oder BBCode.",
     "homepage": "https://github.com/uflagmey/phpbb-forumtree",
-    "version": "1.0.0",
-    "time": "2026-05-01",
+    "version": "1.0.1",
+    "time": "2026-05-03",
     "license": "GPL-2.0-only",
     "authors": [
         {

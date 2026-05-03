@@ -18,6 +18,10 @@ class main_module
 	{
 		global $template, $user, $request, $db, $table_prefix;
 
+		// $id und $mode werden vom phpBB-Modul-Framework übergeben,
+		// von dieser Implementierung aber nicht genutzt.
+		unset($id, $mode);
+
 		$user->add_lang_ext('uflagmey/forumtree', 'common');
 		$user->add_lang_ext('uflagmey/forumtree', 'info_acp_main');
 

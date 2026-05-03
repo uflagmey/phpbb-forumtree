@@ -52,7 +52,8 @@ class main
 		template $template,
 		user $user,
 		$forums_table
-	) {
+	)
+	{
 		$this->auth = $auth;
 		$this->db = $db;
 		$this->helper = $helper;
@@ -77,9 +78,11 @@ class main
 
 		$children = $this->load_children(/*include_hidden*/ false);
 
-		if ($format === 'ascii' || $format === 'bbcode') {
+		if ($format === 'ascii' || $format === 'bbcode')
+		{
 			$tree = $this->render_ascii($children, 0, '', $show_counts);
-			if ($format === 'bbcode') {
+			if ($format === 'bbcode')
+			{
 				$tree = "[code]\n" . $tree . "[/code]\n";
 			}
 			return new Response($tree, 200, ['Content-Type' => 'text/plain; charset=utf-8']);
@@ -113,12 +116,14 @@ class main
 
 		$result = $this->db->sql_query($sql);
 		$children = [];
-		while ($row = $this->db->sql_fetchrow($result)) {
+		while ($row = $this->db->sql_fetchrow($result))
+		{
 			$forum_id = (int) $row['forum_id'];
 			// ACL-Filter: nur Foren anzeigen, die der User sehen darf
 			// (Kategorien, forum_type=0, immer sichtbar wenn Inhalt sichtbar ist)
 			if (!$include_hidden && (int) $row['forum_type'] !== 0
-				&& !$this->auth->acl_get('f_list', $forum_id)) {
+				&& !$this->auth->acl_get('f_list', $forum_id))
+			{
 				continue;
 			}
 			$children[(int) $row['parent_id']][] = $row;
@@ -135,12 +140,14 @@ class main
 		$out = '';
 		$kids = isset($children[$parent]) ? $children[$parent] : [];
 		$n = count($kids);
-		foreach ($kids as $i => $f) {
+		foreach ($kids as $i => $f)
+		{
 			$is_last = ($i === $n - 1);
 			$branch = $is_last ? '└── ' : '├── ';
 			$tag = ((int) $f['forum_type'] === 0) ? ' [Kategorie]' : '';
 			$extra = '';
-			if ($show_counts && (int) $f['forum_type'] !== 0) {
+			if ($show_counts && (int) $f['forum_type'] !== 0)
+			{
 				$extra = sprintf('  (%d / %d)',
 					(int) $f['forum_topics_approved'],
 					(int) $f['forum_posts_approved']);
@@ -158,7 +165,8 @@ class main
 	 */
 	protected function assign_html_tree(array $children, $parent = 0, $show_counts = false, $depth = 0)
 	{
-		foreach (($children[$parent] ?? []) as $f) {
+		foreach (($children[$parent] ?? []) as $f)
+		{
 			$this->template->assign_block_vars('forums', [
 				'NAME'      => $f['forum_name'],
 				'IS_CAT'    => ((int) $f['forum_type'] === 0),
