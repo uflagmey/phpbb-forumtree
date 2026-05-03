@@ -1,5 +1,7 @@
 # Forum Tree – phpBB 3.3.x Extension
 
+[![phpBB Extension Checks](https://github.com/uflagmey/phpbb-forumtree/actions/workflows/checks.yml/badge.svg)](https://github.com/uflagmey/phpbb-forumtree/actions/workflows/checks.yml)
+
 Stellt die Forenstruktur (Kategorien, Foren, Unterforen) als Baum dar – als
 öffentliche Seite unter `/app.php/forumtree` und im ACP unter
 *Foren → Forenbaum*. Ausgabe in **HTML**, **ASCII** oder **BBCode**.

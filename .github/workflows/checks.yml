@@ -1,0 +1,85 @@
+name: phpBB Extension Checks
+
+on:
+  push:
+    branches: [ main ]
+    tags: [ '*' ]
+  pull_request:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  composer:
+    name: Composer validate
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.1'
+          tools: composer
+      - name: Validate composer.json
+        run: composer validate --strict --no-check-publish
+
+  epv:
+    name: Extension Pre Validator
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout into ext/uflagmey/forumtree
+        uses: actions/checkout@v4
+        with:
+          path: ext/uflagmey/forumtree
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.1'
+          tools: composer
+      - name: Install EPV
+        run: composer require --dev phpbb/epv:dev-master --no-interaction
+      - name: Run EPV
+        run: ./vendor/bin/EPV.php run --dir="ext/uflagmey/forumtree"
+
+  ppsse:
+    name: phpBB PHP Strict Standards
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.1'
+          tools: composer, cs2pr
+      - name: Install PPSSE ruleset
+        run: composer require --dev squizlabs/php_codesniffer phpbb/phpbb-coding-standard --no-interaction
+      - name: Run phpcs (phpBB ruleset)
+        run: ./vendor/bin/phpcs -p --standard=phpbb/phpbb-coding-standard --extensions=php --ignore=vendor/,.github/ .
+
+  variable-analysis:
+    name: VariableAnalysis
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.1'
+          tools: composer
+      - name: Install VariableAnalysis
+        run: composer require --dev squizlabs/php_codesniffer sirbrillig/phpcs-variable-analysis --no-interaction
+      - name: Run VariableAnalysis
+        run: ./vendor/bin/phpcs -p --standard=VariableAnalysis --extensions=php --ignore=vendor/,language/,.github/ .
+
+  phpcompat:
+    name: PHPCompatibility (PHP ${{ matrix.php }})
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        php: ['7.1', '7.2', '7.3', '7.4', '8.0', '8.1', '8.2', '8.3', '8.4']
+    steps:
+      - uses: actions/checkout@v4
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.1'
+          tools: composer
+      - name: Install PHPCompatibility
+        run: composer require --dev squizlabs/php_codesniffer phpcompatibility/php-compatibility --no-interaction
+      - name: Run PHPCompatibility (testVersion ${{ matrix.php }})
+        run: ./vendor/bin/phpcs -p --standard=PHPCompatibility --runtime-set testVersion ${{ matrix.php }} --extensions=php --ignore=vendor/,.github/ .
