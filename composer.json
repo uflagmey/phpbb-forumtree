@@ -1,0 +1,25 @@
+{
+    "name": "uflagmey/forumtree",
+    "type": "phpbb-extension",
+    "description": "Stellt die Forenstruktur (Kategorien, Foren, Unterforen) als Baum dar – im ACP und optional als öffentliche Seite. Ausgabe wahlweise als HTML, ASCII oder BBCode.",
+    "homepage": "https://github.com/uflagmey/phpbb-forumtree",
+    "version": "1.0.0",
+    "time": "2026-05-01",
+    "license": "GPL-2.0-only",
+    "authors": [
+        {
+            "name": "Uwe Flagmeyer",
+            "homepage": "https://github.com/uflagmey",
+            "role": "Developer"
+        }
+    ],
+    "require": {
+        "php": ">=7.2.0"
+    },
+    "extra": {
+        "display-name": "Forum Tree",
+        "soft-require": {
+            "phpbb/phpbb": ">=3.3.0,<4.0.0@stable"
+        }
+    }
+}

@@ -1,0 +1,31 @@
+<!-- INCLUDE overall_header.html -->
+
+<h2>{L_FORUMTREE_TITLE}</h2>
+
+<div class="forumtree-toolbar" style="margin: .5em 0 1em 0;">
+	<a class="button" href="{U_FORUMTREE_ASCII}">{L_FORUMTREE_VIEW_ASCII}</a>
+	<a class="button" href="{U_FORUMTREE_BBCODE}">{L_FORUMTREE_VIEW_BBCODE}</a>
+	<a class="button" href="{U_FORUMTREE_TOGGLE_CNT}">
+		<!-- IF S_SHOW_COUNTS -->{L_FORUMTREE_HIDE_COUNTS}<!-- ELSE -->{L_FORUMTREE_SHOW_COUNTS}<!-- ENDIF -->
+	</a>
+</div>
+
+<div class="forumtree">
+<!-- BEGIN forums -->
+	<div class="forumtree-row<!-- IF forums.IS_CAT --> forumtree-cat<!-- ENDIF -->"
+	     style="padding-left: {forums.PADDING}px;">
+		<span class="forumtree-name">{forums.NAME}</span>
+		<!-- IF S_SHOW_COUNTS && !forums.IS_CAT -->
+			<span class="forumtree-counts">({forums.TOPICS} / {forums.POSTS})</span>
+		<!-- ENDIF -->
+	</div>
+<!-- END forums -->
+</div>
+
+<style>
+.forumtree-row { line-height: 1.6; border-left: 1px dotted #aaa; padding-top: 2px; padding-bottom: 2px; }
+.forumtree-cat .forumtree-name { font-weight: bold; }
+.forumtree-counts { color: #888; font-size: .9em; margin-left: .5em; }
+</style>
+
+<!-- INCLUDE overall_footer.html -->

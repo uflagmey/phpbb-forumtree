@@ -1,0 +1,3 @@
+uflagmey_forumtree_display:
+    path: /forumtree
+    defaults: { _controller: uflagmey.forumtree.controller:display }

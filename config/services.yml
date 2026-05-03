@@ -1,0 +1,12 @@
+services:
+    uflagmey.forumtree.controller:
+        class: uflagmey\forumtree\controller\main
+        arguments:
+            - '@auth'
+            - '@dbal.conn'
+            - '@controller.helper'
+            - '@language'
+            - '@request'
+            - '@template'
+            - '@user'
+            - '%core.table_prefix%forums'
