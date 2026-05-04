@@ -32,10 +32,11 @@ jobs:
       - uses: shivammathur/setup-php@v2
         with:
           php-version: '8.1'
-          tools: composer, phpbb/epv
-
+          tools: composer
+      - name: Install EPV
+        run: composer global require phpbb/epv:dev-master --no-interaction
       - name: Run EPV
-        run: EPV.php run --dir="ext/uflagmey/forumtree"
+        run: $(composer global config home --quiet)/vendor/bin/EPV.php run --dir="ext/uflagmey/forumtree"
 
   variable-analysis:
     name: VariableAnalysis
