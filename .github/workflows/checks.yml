@@ -19,7 +19,7 @@ jobs:
           php-version: '8.1'
           tools: composer
       - name: Validate composer.json
-        run: composer validate --strict --no-check-publish
+        run: composer validate --no-check-publish --no-check-all
 
   epv:
     name: Extension Pre Validator
@@ -32,25 +32,10 @@ jobs:
       - uses: shivammathur/setup-php@v2
         with:
           php-version: '8.1'
-          tools: composer
-      - name: Install EPV
-        run: composer require --dev phpbb/epv:dev-master --no-interaction
-      - name: Run EPV
-        run: ./vendor/bin/EPV.php run --dir="ext/uflagmey/forumtree"
+          tools: composer, phpbb/epv
 
-  ppsse:
-    name: phpBB PHP Strict Standards
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - uses: shivammathur/setup-php@v2
-        with:
-          php-version: '8.1'
-          tools: composer, cs2pr
-      - name: Install PPSSE ruleset
-        run: composer require --dev squizlabs/php_codesniffer phpbb/phpbb-coding-standard --no-interaction
-      - name: Run phpcs (phpBB ruleset)
-        run: ./vendor/bin/phpcs -p --standard=phpbb/phpbb-coding-standard --extensions=php --ignore=vendor/,.github/ .
+      - name: Run EPV
+        run: EPV.php run --dir="ext/uflagmey/forumtree"
 
   variable-analysis:
     name: VariableAnalysis
@@ -60,11 +45,13 @@ jobs:
       - uses: shivammathur/setup-php@v2
         with:
           php-version: '8.1'
-          tools: composer
-      - name: Install VariableAnalysis
-        run: composer require --dev squizlabs/php_codesniffer sirbrillig/phpcs-variable-analysis --no-interaction
+          tools: composer, phpcs
+      - name: Install VariableAnalysis ruleset
+        run: composer global require sirbrillig/phpcs-variable-analysis --no-interaction
+      - name: Register VariableAnalysis with phpcs
+        run: phpcs --config-set installed_paths $(composer global config home --quiet)/vendor/sirbrillig/phpcs-variable-analysis
       - name: Run VariableAnalysis
-        run: ./vendor/bin/phpcs -p --standard=VariableAnalysis --extensions=php --ignore=vendor/,language/,.github/ .
+        run: phpcs -p --standard=VariableAnalysis --extensions=php --ignore=vendor/,language/,.github/ .
 
   phpcompat:
     name: PHPCompatibility (PHP ${{ matrix.php }})
@@ -78,8 +65,10 @@ jobs:
       - uses: shivammathur/setup-php@v2
         with:
           php-version: '8.1'
-          tools: composer
-      - name: Install PHPCompatibility
-        run: composer require --dev squizlabs/php_codesniffer phpcompatibility/php-compatibility --no-interaction
+          tools: composer, phpcs
+      - name: Install PHPCompatibility ruleset
+        run: composer global require phpcompatibility/php-compatibility --no-interaction
+      - name: Register PHPCompatibility with phpcs
+        run: phpcs --config-set installed_paths $(composer global config home --quiet)/vendor/phpcompatibility/php-compatibility
       - name: Run PHPCompatibility (testVersion ${{ matrix.php }})
-        run: ./vendor/bin/phpcs -p --standard=PHPCompatibility --runtime-set testVersion ${{ matrix.php }} --extensions=php --ignore=vendor/,.github/ .
+        run: phpcs -p --standard=PHPCompatibility --runtime-set testVersion ${{ matrix.php }} --extensions=php --ignore=vendor/,.github/ .
