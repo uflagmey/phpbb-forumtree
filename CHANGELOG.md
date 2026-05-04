@@ -1,5 +1,14 @@
 # Changelog
 
+## 1.0.2 – 2026-05-03
+
+UI-Verbesserungen basierend auf Kirks Feedback:
+
+- **ACP-Seite**: Wrapping mit `overall_header.html` / `overall_footer.html` direkt im Body-Template – behebt den weißen Hintergrund auf Installationen, bei denen `adm_page_header()` verschluckt wird
+- **Frontend ASCII/BBCode**: Werden jetzt im phpBB-Style gerendert (über `controller.helper::render()`) statt als rohes `text/plain`. Damit erscheint der Baum auch auf der öffentlichen Seite mit Forum-Header/Footer und korrektem Theme – nicht mehr unstyled auf weißem/schwarzem Hintergrund
+- **Format-Toggle**: HTML-Frontend hat jetzt – wie das ACP – eine durchgängige Format-Umschaltleiste (HTML | ASCII | BBCode), aktiver Modus wird hervorgehoben
+- **Codebereinigung**: `Symfony\HttpFoundation\Response`-Import entfernt (wird nicht mehr benötigt)
+
 ## 1.0.1 – 2026-05-03
 
 Bugfixes und Code-Qualität (basierend auf Feedback von Kirk und phpBB Ext Check):

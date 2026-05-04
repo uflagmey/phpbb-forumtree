@@ -15,7 +15,6 @@ use phpbb\language\language;
 use phpbb\request\request;
 use phpbb\template\template;
 use phpbb\user;
-use Symfony\Component\HttpFoundation\Response;
 
 class main
 {
@@ -78,24 +77,22 @@ class main
 
 		$children = $this->load_children(/*include_hidden*/ false);
 
-		if ($format === 'ascii' || $format === 'bbcode')
-		{
-			$tree = $this->render_ascii($children, 0, '', $show_counts);
-			if ($format === 'bbcode')
-			{
-				$tree = "[code]\n" . $tree . "[/code]\n";
-			}
-			return new Response($tree, 200, ['Content-Type' => 'text/plain; charset=utf-8']);
-		}
+		// ASCII-Baum für alle Formate vorberechnen, das Template entscheidet
+		// per S_FORMAT, was angezeigt wird.
+		$ascii = $this->render_ascii($children, 0, '', $show_counts);
 
-		// HTML via phpBB-Template
 		$this->assign_html_tree($children, 0, $show_counts);
+
 		$this->template->assign_vars([
 			'L_FORUMTREE_TITLE'      => $this->language->lang('FORUMTREE_TITLE'),
+			'FORUMTREE_ASCII'        => $ascii,
+			'FORUMTREE_BBCODE'       => "[code]\n" . $ascii . "[/code]\n",
+			'S_FORMAT'               => $format,
+			'S_SHOW_COUNTS'          => $show_counts,
+			'U_FORUMTREE_HTML'       => $this->helper->route('uflagmey_forumtree_display', ($show_counts ? ['counts' => 1] : [])),
 			'U_FORUMTREE_ASCII'      => $this->helper->route('uflagmey_forumtree_display', ['format' => 'ascii'] + ($show_counts ? ['counts' => 1] : [])),
 			'U_FORUMTREE_BBCODE'     => $this->helper->route('uflagmey_forumtree_display', ['format' => 'bbcode'] + ($show_counts ? ['counts' => 1] : [])),
-			'U_FORUMTREE_TOGGLE_CNT' => $this->helper->route('uflagmey_forumtree_display', ['counts' => $show_counts ? 0 : 1]),
-			'S_SHOW_COUNTS'          => $show_counts,
+			'U_FORUMTREE_TOGGLE_CNT' => $this->helper->route('uflagmey_forumtree_display', ($format !== 'html' ? ['format' => $format] : []) + ['counts' => $show_counts ? 0 : 1]),
 		]);
 
 		return $this->helper->render('forumtree_body.html', $this->language->lang('FORUMTREE_TITLE'));

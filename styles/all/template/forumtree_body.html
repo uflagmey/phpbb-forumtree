@@ -3,24 +3,33 @@
 <h2>{L_FORUMTREE_TITLE}</h2>
 
 <div class="forumtree-toolbar" style="margin: .5em 0 1em 0;">
-	<a class="button" href="{U_FORUMTREE_ASCII}">{L_FORUMTREE_VIEW_ASCII}</a>
-	<a class="button" href="{U_FORUMTREE_BBCODE}">{L_FORUMTREE_VIEW_BBCODE}</a>
-	<a class="button" href="{U_FORUMTREE_TOGGLE_CNT}">
+	<strong>{L_FORUMTREE_FORMAT}:</strong>
+	<a href="{U_FORUMTREE_HTML}"<!-- IF S_FORMAT == 'html' --> style="font-weight:bold;"<!-- ENDIF -->>HTML</a> |
+	<a href="{U_FORUMTREE_ASCII}"<!-- IF S_FORMAT == 'ascii' --> style="font-weight:bold;"<!-- ENDIF -->>ASCII</a> |
+	<a href="{U_FORUMTREE_BBCODE}"<!-- IF S_FORMAT == 'bbcode' --> style="font-weight:bold;"<!-- ENDIF -->>BBCode</a>
+	&nbsp;&nbsp;
+	<a href="{U_FORUMTREE_TOGGLE_CNT}">
 		<!-- IF S_SHOW_COUNTS -->{L_FORUMTREE_HIDE_COUNTS}<!-- ELSE -->{L_FORUMTREE_SHOW_COUNTS}<!-- ENDIF -->
 	</a>
 </div>
 
-<div class="forumtree">
-<!-- BEGIN forums -->
-	<div class="forumtree-row<!-- IF forums.IS_CAT --> forumtree-cat<!-- ENDIF -->"
-	     style="padding-left: {forums.PADDING}px;">
-		<span class="forumtree-name">{forums.NAME}</span>
-		<!-- IF S_SHOW_COUNTS && !forums.IS_CAT -->
-			<span class="forumtree-counts">({forums.TOPICS} / {forums.POSTS})</span>
-		<!-- ENDIF -->
+<!-- IF S_FORMAT == 'html' -->
+	<div class="forumtree">
+	<!-- BEGIN forums -->
+		<div class="forumtree-row<!-- IF forums.IS_CAT --> forumtree-cat<!-- ENDIF -->"
+		     style="padding-left: {forums.PADDING}px;">
+			<span class="forumtree-name">{forums.NAME}</span>
+			<!-- IF S_SHOW_COUNTS && !forums.IS_CAT -->
+				<span class="forumtree-counts">({forums.TOPICS} / {forums.POSTS})</span>
+			<!-- ENDIF -->
+		</div>
+	<!-- END forums -->
 	</div>
-<!-- END forums -->
-</div>
+<!-- ELSEIF S_FORMAT == 'bbcode' -->
+	<textarea readonly class="forumtree-output" style="width:100%; min-height: 400px; font-family: monospace; padding: .5em;">{FORUMTREE_BBCODE}</textarea>
+<!-- ELSE -->
+	<pre class="forumtree-output" style="padding: 1em; overflow: auto; font-family: monospace; line-height: 1.4;">{FORUMTREE_ASCII}</pre>
+<!-- ENDIF -->
 
 <style>
 .forumtree-row { line-height: 1.6; border-left: 1px dotted #aaa; padding-top: 2px; padding-bottom: 2px; }
